@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  namespace: default
+  labels:
+    app: mysql-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  labels:
+    app: mysql-pod
+spec:
+  selector:
+    matchLabels:
+      app: mysql-pod
+  template:
+    metadata:
+      labels:
+        app: mysql-pod
+    spec:
+      containers:
+      - name: mysql
+        image: my_mysql
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: mysql-persistent-volume
+        env:
+        - name: WP_DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: wordpress-db-name
+        - name: WP_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: wordpress-mysql-db-user
+        - name: WP_DB_PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: wordpress-mysql-db-passwd
+        - name: MYSQL_ADMIN
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-admin
+        - name: MYSQL_ADMIN_PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-admin-passwd
+      volumes:
+       - name: mysql-persistent-volume
+         persistentVolumeClaim:
+          claimName: mysql-pv-claim
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  labels:
+    app: mysql-service
+spec:
+  type: ClusterIP
+  selector:
+    app: mysql-pod
+  ports:
+  - port: 3306 
+    targetPort: 3306
+    protocol: TCP
+    
