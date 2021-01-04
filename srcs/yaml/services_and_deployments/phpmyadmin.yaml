@@ -1,42 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wordpress-deployment
+  name: phpmyadmin-deployment
   labels:
-    app: wp-pod
+    app: phpmyadmin
 spec:
   selector:
     matchLabels:
-      app: wp-pod
+      app: phpmyadmin
   template:
     metadata:
       labels:
-        app: wp-pod
+        app: phpmyadmin
     spec:
       containers:
-      - name: wordpress
-        image: my_wordpress
+      - name: phpmyadmin
+        image: my_phpmyadmin
         imagePullPolicy: Never
         ports:
-        - containerPort: 5050
+        - containerPort: 5000
+        env:
+        - name: WP_DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: wp-db-configmap
+              key: wp-db-host
 
 ---
   
 apiVersion: v1
 kind: Service
 metadata:
-  name: wp-service
+  name: phpmyadmin-service
   annotations:
     metallb.universe.tf/allow-shared-ip: "sharing key"
-  labels:
-    app: wp-service
 spec:
   selector:
-    app: wp-pod
+    app: phpmyadmin
   type: LoadBalancer
   loadBalancerIP: ${EXTERNAL_IP}
   ports:
-  - port: 5050
-    targetPort: 5050
+  - port: 5000
+    targetPort: 5000
     protocol: TCP
-

@@ -17,7 +17,7 @@ ARG WP_VERSION="wordpress-5.6"
 ARG WP_FILE="${WP_VERSION}.tar.gz"
 
 RUN wget https://wordpress.org/${WP_FILE}   && \
-    tar -xf ${WP_FILE}                      && \
+    tar -xzf ${WP_FILE}                      && \
     mv wordpress /var/www/                  && \
     rm -rf ${WP_FILE}
 

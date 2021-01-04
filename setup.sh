@@ -33,21 +33,26 @@ OTHER_PART=`docker network inspect bridge --format='{{(index .IPAM.Config 0).Gat
 export EXTERNAL_IP=`minikube ip`
 
 
-envsubst '$EXTERNAL_IP' < srcs/yaml/templates/metallb_configmap.yaml    > srcs/yaml/metallb_configmap.yaml
-envsubst '$EXTERNAL_IP' < srcs/yaml/templates/wordpress.yaml            > srcs/yaml/wordpress.yaml
-envsubst '$EXTERNAL_IP' < srcs/yaml/templates/mysql.yaml                > srcs/yaml/mysql.yaml
+envsubst '$EXTERNAL_IP' < srcs/yaml/configmaps/metallb_configmap.yaml           > srcs/yaml/metallb_configmap.yaml
+envsubst '$EXTERNAL_IP' < srcs/yaml/services_and_deployments/wordpress.yaml     > srcs/yaml/wordpress.yaml
+envsubst '$EXTERNAL_IP' < srcs/yaml/services_and_deployments/mysql.yaml         > srcs/yaml/mysql.yaml
+envsubst '$EXTERNAL_IP' < srcs/yaml/services_and_deployments/phpmyadmin.yaml    > srcs/yaml/phpmyadmin.yaml
 
 
 kubectl apply -f srcs/yaml/metallb_configmap.yaml
+kubectl apply -f srcs/yaml/configmaps/wp_db_configmap.yaml
 
 chmod +x srcs/mysql/srcs/*.sh 
+chmod +x srcs/phpmyadmin/srcs/*.sh 
 
 eval $(minikube docker-env)
 docker build -t my_mysql        srcs/mysql
 docker build -t my_wordpress    srcs/wordpress
+docker build -t my_phpmyadmin srcs/phpmyadmin
 
 kubectl apply -f srcs/yaml/mysql.yaml
 kubectl apply -f srcs/yaml/wordpress.yaml
+kubectl apply -f srcs/yaml/phpmyadmin.yaml
 
 
 minikube dashboard &
