@@ -7,9 +7,16 @@ mv phpMyAdmin-5.0.4-all-languages.tar.gz phpmyadmin.tar.gz
 tar xzf phpmyadmin.tar.gz --strip-components=1 -C /var/www/phpmyadmin/
 
 sed s/localhost/$WP_DB_HOST/g /var/www/phpmyadmin/config.sample.inc.php > /var/www/phpmyadmin/config.inc.php
+echo "\$cfg['PmaAbsoluteUri'] = './';" >> /var/www/phpmyadmin/config.inc.php
 
 rm phpmyadmin.tar.gz
 
+# ssl certificate
+# Create ssl certificate
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -subj "/C=FR/ST=75/L=Paris/O=42/CN=tvideira"    \
+    -keyout /etc/ssl/private/nginx-selfsigned.key   \
+    -out /etc/ssl/certs/nginx-selfsigned.crt
 
 # Create this directory or change it in configs order to launch nginx
 mkdir -p /run/nginx
