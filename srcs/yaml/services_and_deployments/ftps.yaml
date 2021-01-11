@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ftps-pv-claim
+  namespace: default
+  labels:
+    app: ftps-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ftps-deployment
+  labels:
+    app: ftps
+spec:
+  selector:
+    matchLabels:
+      app: ftps
+  template:
+    metadata:
+      labels:
+        app: ftps
+    spec:
+      containers:
+      - name: ftps
+        image: my_ftps
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 20
+          name: ftps-port-20
+        - containerPort: 21
+          name: ftps-port-21
+        - containerPort: 30000
+          name: ftps-port-30000
+        volumeMounts:
+          - mountPath: /home
+            name: ftps-persistent-volume
+        env:
+        - name: FTP_USER
+          valueFrom:
+            secretKeyRef:
+              name: ftps-secret
+              key: ftp-user
+        - name: FTP_PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: ftps-secret
+              key: ftp-passwd
+        - name: IP
+          value: ${EXTERNAL_IP}
+      volumes:
+       - name: ftps-persistent-volume
+         persistentVolumeClaim:
+          claimName: ftps-pv-claim
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ftps-service
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "sharing key"
+spec:
+  selector:
+    app: ftps
+  type: LoadBalancer
+  loadBalancerIP: ${EXTERNAL_IP}
+  ports:
+  - port: 20
+    name: ftps-port-20
+    targetPort: 20
+    protocol: TCP
+  - port: 21
+    name: ftps-port-21
+    targetPort: 21
+    protocol: TCP
+  - port: 30000
+    name: ftps-port-30000
+    targetPort: 30000
+    protocol: TCP
