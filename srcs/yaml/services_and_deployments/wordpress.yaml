@@ -19,7 +19,37 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 5050
-
+        env:
+        - name: WP_DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: wordpress-db-name
+        - name: WP_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: wordpress-mysql-db-user
+        - name: WP_DB_PASSWD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: wordpress-mysql-db-passwd
+        - name: WP_DB_TABLE_PREFIX
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: wordpress-db-table-prefix
+        - name: WP_DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: wp-db-configmap
+              key: wp-db-host
+        - name: WP_IP
+          value: ${EXTERNAL_IP}
+        - name: WP_PORT
+          value: "5050"
+        
 ---
   
 apiVersion: v1
