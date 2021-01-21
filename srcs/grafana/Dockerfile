@@ -10,5 +10,4 @@ RUN apk add --no-cache grafana telegraf --repository=http://dl-cdn.alpinelinux.o
 
 COPY srcs/entrypoint.sh /usr/sbin/entrypoint.sh
 
-
 ENTRYPOINT ["/usr/sbin/entrypoint.sh"]

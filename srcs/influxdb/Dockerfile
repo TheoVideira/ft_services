@@ -8,6 +8,4 @@ RUN apk add --no-cache influxdb telegraf --repository=http://dl-cdn.alpinelinux.
 COPY srcs/entrypoint.sh /usr/sbin/entrypoint.sh
 
 
-CMD [ "influxd" ]
-
-#ENTRYPOINT ["/usr/sbin/entrypoint.sh"]
+ENTRYPOINT ["/usr/sbin/entrypoint.sh"]

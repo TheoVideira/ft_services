@@ -30,6 +30,8 @@ envsubst '$EXTERNAL_IP' < srcs/yaml/services_and_deployments/wordpress.yaml     
 envsubst '$EXTERNAL_IP' < srcs/yaml/services_and_deployments/phpmyadmin.yaml    > srcs/yaml/phpmyadmin.yaml
 envsubst '$EXTERNAL_IP' < srcs/yaml/services_and_deployments/nginx.yaml         > srcs/yaml/nginx.yaml
 envsubst '$EXTERNAL_IP' < srcs/yaml/services_and_deployments/ftps.yaml          > srcs/yaml/ftps.yaml
+envsubst '$EXTERNAL_IP' < srcs/yaml/services_and_deployments/grafana.yaml       > srcs/yaml/grafana.yaml
+envsubst '$EXTERNAL_IP' < srcs/yaml/services_and_deployments/influxdb.yaml      > srcs/yaml/influxdb.yaml
 
 # Apply secrets
 kubectl apply -f srcs/yaml/secrets
@@ -48,6 +50,8 @@ docker build -t my_wordpress    srcs/wordpress
 docker build -t my_phpmyadmin   srcs/phpmyadmin
 docker build -t my_nginx        srcs/nginx
 docker build -t my_ftps         srcs/ftps
+docker build -t my_grafana      srcs/grafana
+docker build -t my_influxdb     srcs/influxdb
 
 # Apply deployments and services
 kubectl apply -f srcs/yaml/mysql.yaml
@@ -55,6 +59,8 @@ kubectl apply -f srcs/yaml/wordpress.yaml
 kubectl apply -f srcs/yaml/phpmyadmin.yaml
 kubectl apply -f srcs/yaml/nginx.yaml
 kubectl apply -f srcs/yaml/ftps.yaml
+kubectl apply -f srcs/yaml/grafana.yaml
+kubectl apply -f srcs/yaml/influxdb.yaml
 
 # Start dashboard
 minikube dashboard &
