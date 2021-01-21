@@ -5,7 +5,7 @@ LABEL maintainer="Théo Videira (tvideira@student.42.fr)"
 WORKDIR /tmp
 
 # Install nginx and additional packages
-RUN apk update && apk add --no-cache nginx php7 php7-fpm  php7-opcache \
+RUN apk add --no-cache nginx php7 php7-fpm  php7-opcache \
 php7-gd php7-mysqli php7-zlib php7-curl php7-mbstring php7-json \
 php7-session php7-bz2 php-zip openssl
 

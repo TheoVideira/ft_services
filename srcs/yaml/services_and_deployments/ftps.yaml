@@ -17,7 +17,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ftps-deployment
+  name: ftps
   labels:
     app: ftps
 spec:
@@ -38,8 +38,8 @@ spec:
           name: ftps-port-20
         - containerPort: 21
           name: ftps-port-21
-        - containerPort: 30000
-          name: ftps-port-30000
+        - containerPort: 20000
+          name: ftps-port-20000
         volumeMounts:
           - mountPath: /home
             name: ftps-persistent-volume
@@ -66,7 +66,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ftps-service
+  name: ftps
   annotations:
     metallb.universe.tf/allow-shared-ip: "sharing key"
 spec:
@@ -83,7 +83,7 @@ spec:
     name: ftps-port-21
     targetPort: 21
     protocol: TCP
-  - port: 30000
-    name: ftps-port-30000
-    targetPort: 30000
+  - port: 20000
+    name: ftps-port-20000
+    targetPort: 20000
     protocol: TCP

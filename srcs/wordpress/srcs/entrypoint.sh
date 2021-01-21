@@ -22,9 +22,6 @@ do
         echo $TRIES
         if [[ $TRIES = 0 ]]
         then
-            cat wp-config.php
-            echo ${WP_DB_PASSWD}
-            echo ${WP_DB_USER}
             echo "Could not connect to database !"
             exit 1
         fi
@@ -33,7 +30,7 @@ do
         break
     fi
 done
-# Check if wordpress is installed
+# Check if wordpress is already installed
 wp core is-installed
 if [[ $? = 0 ]]
 then

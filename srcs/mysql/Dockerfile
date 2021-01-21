@@ -5,7 +5,7 @@ LABEL maintainer="Théo Videira (tvideira@student.42.fr)"
 WORKDIR /tmp
 
 # Install mysql packages
-RUN apk update && apk add --no-cache mysql mysql-client
+RUN apk add --no-cache mysql mysql-client
 
 # Copy mysql setup and entrypoint
 COPY srcs/entrypoint.sh /usr/sbin/entrypoint.sh
