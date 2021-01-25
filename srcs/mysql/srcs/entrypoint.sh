@@ -6,7 +6,7 @@ mysql_install_db --user=mysql --datadir=/var/lib/mysql/
 sed -i 's/^skip-networking/#&/' /etc/my.cnf.d/mariadb-server.cnf
 
 mkdir -p /etc/telegraf
-telegraf -sample-config --input-filter cpu:mem --output-filter influxdb > /etc/telegraf/telegraf.conf
+telegraf -sample-config --input-filter cpu:mem:net:swap:diskio --output-filter influxdb > /etc/telegraf/telegraf.conf
 sed -i s/'# urls = \["http:\/\/127.0.0.1:8086"\]'/'urls = ["http:\/\/influxdb:8086"]'/ /etc/telegraf/telegraf.conf
 sed -i s/'# database = "telegraf"'/'database = "mysql"'/ /etc/telegraf/telegraf.conf
 sed -i s/'omit_hostname = false'/'omit_hostname = true'/ /etc/telegraf/telegraf.conf
