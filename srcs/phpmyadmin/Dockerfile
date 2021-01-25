@@ -8,6 +8,7 @@ WORKDIR /tmp
 RUN apk add --no-cache nginx php7 php7-fpm  php7-opcache \
 php7-gd php7-mysqli php7-zlib php7-curl php7-mbstring php7-json \
 php7-session php7-bz2 php-zip openssl
+RUN apk add --no-cache telegraf --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
 
 # Install phpmyadmin
 ARG PHPMA_VERSION="5.0.4"

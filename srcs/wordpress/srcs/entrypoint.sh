@@ -46,6 +46,12 @@ else
     wp option update blogdescription "I HATE REVERSE PROXY"
 fi
 
+mkdir -p /etc/telegraf
+telegraf -sample-config --input-filter cpu:mem --output-filter influxdb > /etc/telegraf/telegraf.conf
+sed -i s/'# urls = \["http:\/\/127.0.0.1:8086"\]'/'urls = ["http:\/\/influxdb:8086"]'/ /etc/telegraf/telegraf.conf
+sed -i s/'# database = "telegraf"'/'database = "wordpress"'/ /etc/telegraf/telegraf.conf
+sed -i s/'omit_hostname = false'/'omit_hostname = true'/ /etc/telegraf/telegraf.conf
+
 # Create this directory or change it in configs order to launch nginx
 mkdir -p /run/nginx
 
@@ -68,6 +74,8 @@ then
 	exit $status
 fi
 
+# Start telegraf
+telegraf &
 
 # Naive check runs once a minute if any processes exited
 # If a process exited
@@ -78,9 +86,11 @@ while sleep 60; do
     PROCESS_1_STATUS=$?
     ps aux |grep php-fpm |grep -q -v grep
     PROCESS_2_STATUS=$?
+    ps aux |grep telegraf |grep -q -v grep
+    PROCESS_3_STATUS=$?
     # If the greps above find anything, they exit with 0 status
     # If they are not both 0, then something is wrong
-    if [ $PROCESS_1_STATUS -ne 0 -o $PROCESS_2_STATUS -ne 0 ];
+    if [ $PROCESS_1_STATUS -ne 0 -o $PROCESS_2_STATUS -ne 0 -o $PROCESS_3_STATUS -ne 0 ];
     then
         echo "One of the processes has already exited."
         exit 1

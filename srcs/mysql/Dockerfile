@@ -6,6 +6,7 @@ WORKDIR /tmp
 
 # Install mysql packages
 RUN apk add --no-cache mysql mysql-client
+RUN apk add --no-cache telegraf --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
 
 # Copy mysql setup and entrypoint
 COPY srcs/entrypoint.sh /usr/sbin/entrypoint.sh

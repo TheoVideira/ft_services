@@ -5,6 +5,7 @@ LABEL maintainer="Théo Videira (tvideira@student.42.fr)"
 WORKDIR /tmp
 
 RUN apk add --no-cache nginx openssl
+RUN apk add --no-cache telegraf --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
 
 RUN mkdir -p /var/www/html;
 

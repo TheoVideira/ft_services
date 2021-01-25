@@ -35,7 +35,7 @@ metadata:
     app: grafana
 spec:
   selector:
-    app: grafana-pod
+    app: grafana
   type: LoadBalancer
   loadBalancerIP: ${EXTERNAL_IP}
   ports:
