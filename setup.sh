@@ -1,5 +1,8 @@
 #!/bin/sh
 
+minikube stop
+minikube delete
+
 # Start docker
 minikube start --driver=docker
 # Enable dashboard
