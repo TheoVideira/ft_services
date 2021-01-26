@@ -65,8 +65,8 @@ spec:
               name: mysql-secret
               key: mysql-admin-passwd
       volumes:
-       - name: mysql-persistent-volume
-         persistentVolumeClaim:
+      - name: mysql-persistent-volume
+        persistentVolumeClaim:
           claimName: mysql-pv-claim
 
 ---
