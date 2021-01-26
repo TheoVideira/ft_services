@@ -48,13 +48,13 @@ chmod +x srcs/*/srcs/*.sh
 
 # Building images
 eval $(minikube docker-env)
-docker build -t my_mysql        srcs/mysql
-docker build -t my_wordpress    srcs/wordpress
-docker build -t my_phpmyadmin   srcs/phpmyadmin
-docker build -t my_nginx        srcs/nginx
-docker build -t my_ftps         srcs/ftps
-docker build -t my_grafana      srcs/grafana
-docker build -t my_influxdb     srcs/influxdb
+docker build -t my_mysql        srcs/mysql      . --network=host
+docker build -t my_wordpress    srcs/wordpress  . --network=host
+docker build -t my_phpmyadmin   srcs/phpmyadmin . --network=host
+docker build -t my_nginx        srcs/nginx      . --network=host
+docker build -t my_ftps         srcs/ftps       . --network=host
+docker build -t my_grafana      srcs/grafana    . --network=host
+docker build -t my_influxdb     srcs/influxdb   . --network=host
 
 # Apply deployments and services
 kubectl apply -f srcs/yaml/mysql.yaml
